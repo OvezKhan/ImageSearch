@@ -16,15 +16,24 @@ import searchRoutes from "./routes/search.js";
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",                        // local dev
+    "https://image-search-alpha-mauve.vercel.app"   // ✅ your deployed frontend
+  ],
   credentials: true
 }));
 
 app.use(express.json());
+
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || "secret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: true,       // Render uses HTTPS
+    sameSite: "none",   // allow cross-site cookies from Vercel
+    httpOnly: true
+  }
 }));
 
 app.use(passport.initialize());
@@ -70,7 +79,3 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 app.listen(5000, () => console.log("Server running on port 5000"));
-
-
-// In your backend server file
-
