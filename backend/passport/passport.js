@@ -27,8 +27,8 @@ passport.use(new GoogleStrategy({
   process.env.NODE_ENV === "production"
     ? process.env.GOOGLE_CALLBACK_URL
     : "http://localhost:5000/auth/google/callback",
-
-
+  
+    // callbackURL: "http://localhost:5000/auth/google/callback",
 
 }, async (accessToken, refreshToken, profile, done) => {
   let user = await User.findOne({ googleId: profile.id });
@@ -51,6 +51,8 @@ passport.use(new GitHubStrategy({
 
 
     
+    // callbackURL: "http://localhost:5000/auth/github/callback",
+
 }, async (accessToken, refreshToken, profile, done) => {
   let user = await User.findOne({ githubId: profile.id });
   if (!user)

@@ -2,11 +2,14 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext();
+
 // const backendUrl = "https://imagesearch-4g8h.onrender.com";
 
 const backendUrl = process.env.NODE_ENV === 'production'
   ? "https://imagesearch-4g8h.onrender.com" // Your live backend
   : "http://localhost:5000"; // Your local backend
+
+// const backendUrl = "https://imagesearch-4g8h.onrender.com";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -55,4 +58,7 @@ export const AuthProvider = ({ children }) => {
 // This is a custom hook to easily get the auth state
 export const useAuth = () => {
   return useContext(AuthContext);
+
 };
+
+

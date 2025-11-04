@@ -25,6 +25,7 @@ app.use(cors({
 
 app.use(express.json());
 
+
 // app.use(session({
 //   secret: process.env.SESSION_SECRET || "secret",
 //   resave: false,
@@ -63,6 +64,18 @@ app.use(
 );
 
 //
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || "secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,       // Render uses HTTPS
+    sameSite: "none",   // allow cross-site cookies from Vercel
+    httpOnly: true
+  }
+}));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
