@@ -7,7 +7,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import session from 'express-session';
-
+import MongoStore from 'connect-mongo';
 import passport from "passport";
 import "./passport/passport.js";
 import authRoutes from "./routes/auth.js";
@@ -26,20 +26,7 @@ app.use(cors({
 app.use(express.json());
 
 
-// app.use(session({
-//   secret: process.env.SESSION_SECRET || "secret",
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     secure: true,       // Render uses HTTPS
-//     sameSite: "none",   // allow cross-site cookies from Vercel
-//     httpOnly: true
-//   }
-// }));
 
-// In backend/server.js
-
-// ... (your app.use(express.json()) line) ...
 
 // --- THIS IS THE NEW, CORRECT CODE ---
 
@@ -51,6 +38,12 @@ app.use(
     secret: process.env.SESSION_SECRET || "secret",
     resave: false,
     saveUninitialized: false,
+
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI, // Use your MongoDB connection string
+      collectionName: 'sessions' // You can name this collection anything
+    }),
+
     cookie: {
       // Set to true in production (https://)
       secure: isProduction,
@@ -60,21 +53,11 @@ app.use(
       
       httpOnly: true,
     },
+
+    
   })
 );
 
-//
-
-app.use(session({
-  secret: process.env.SESSION_SECRET || "secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,       // Render uses HTTPS
-    sameSite: "none",   // allow cross-site cookies from Vercel
-    httpOnly: true
-  }
-}));
 
 
 app.use(passport.initialize());
