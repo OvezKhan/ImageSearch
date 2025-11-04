@@ -28,6 +28,8 @@ app.use(express.json());
 // --- THIS IS THE NEW, CORRECT CODE ---
 
 const isProduction = process.env.NODE_ENV === "production";
+// Tell Express to trust the Render reverse proxy
+app.set("trust proxy", 1);
 
 app.use(
   session({
