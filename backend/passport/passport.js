@@ -43,9 +43,14 @@ passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID ,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
   // callbackURL: "/auth/github/callback"
-  callbackURL: process.env.GITHUB_CALLBACK_URL || "https://imagesearch-4g8h.onrender.com/auth/github/callback",
+  // callbackURL: process.env.GITHUB_CALLBACK_URL || "https://imagesearch-4g8h.onrender.com/auth/github/callback",
+  callbackURL:
+  process.env.NODE_ENV === "production"
+    ? process.env.GITHUB_CALLBACK_URL
+    : "http://localhost:5000/auth/github/callback",
 
 
+    
 }, async (accessToken, refreshToken, profile, done) => {
   let user = await User.findOne({ githubId: profile.id });
   if (!user)
