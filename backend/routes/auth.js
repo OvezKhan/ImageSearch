@@ -1,35 +1,38 @@
-import express from "express";
-import passport from "passport";
+import express from 'express';
+import passport from 'passport';
 
 const router = express.Router();
 
+// --- THIS IS THE FIX ---
+const isProduction = process.env.NODE_ENV === 'production';
+const clientUrl = isProduction
+  ? 'https://image-search-alpha-mauve.vercel.app' // Your Vercel URL
+  : 'http://localhost:3000'; // Your local React URL
+
+// --- Google Routes ---
 router.get("/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 router.get("/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:3000",
-    failureRedirect: "http://localhost:3000/login"
+    successRedirect: clientUrl, // Use the dynamic URL
+    failureRedirect: `${clientUrl}/login` // Use the dynamic URL
   })
 );
 
-router.get("/logout", (req, res) => {
-  req.logout(() => {});
-  res.redirect("http://localhost:3000");
-});
-
+// --- GitHub Routes ---
 router.get('/github', 
   passport.authenticate('github', { scope: [ 'user:email' ] })
 );
 
 router.get('/github/callback', 
   passport.authenticate('github', { 
-    failureRedirect: 'http://localhost:3000/login' 
+    failureRedirect: `${clientUrl}/login` // Use the dynamic URL
   }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.redirect('http://localhost:3000/');
+    res.redirect(clientUrl); // Use the dynamic URL
   }
 );
 
