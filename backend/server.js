@@ -25,16 +25,44 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || "secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,       // Render uses HTTPS
-    sameSite: "none",   // allow cross-site cookies from Vercel
-    httpOnly: true
-  }
-}));
+// app.use(session({
+//   secret: process.env.SESSION_SECRET || "secret",
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     secure: true,       // Render uses HTTPS
+//     sameSite: "none",   // allow cross-site cookies from Vercel
+//     httpOnly: true
+//   }
+// }));
+
+// In backend/server.js
+
+// ... (your app.use(express.json()) line) ...
+
+// --- THIS IS THE NEW, CORRECT CODE ---
+
+const isProduction = process.env.NODE_ENV === "production";
+
+app.use(
+  session({
+    // Use a real secret from your .env file
+    secret: process.env.SESSION_SECRET || "secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      // Set to true in production (https://)
+      secure: isProduction,
+      
+      // 'none' for cross-site production, 'lax' for localhost
+      sameSite: isProduction ? "none" : "lax", 
+      
+      httpOnly: true,
+    },
+  })
+);
+
+//
 
 app.use(passport.initialize());
 app.use(passport.session());
