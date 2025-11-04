@@ -25,9 +25,6 @@ app.use(cors({
 
 app.use(express.json());
 
-
-
-
 // --- THIS IS THE NEW, CORRECT CODE ---
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -35,7 +32,7 @@ const isProduction = process.env.NODE_ENV === "production";
 app.use(
   session({
     // Use a real secret from your .env file
-    secret: process.env.SESSION_SECRET || "secret",
+    secret: process.env.SESSION_SECRET || "khanovezmustsecurethissession",
     resave: false,
     saveUninitialized: false,
 
