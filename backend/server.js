@@ -59,8 +59,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/auth", authRoutes);
-app.use("/api", searchRoutes);
+
 
 // 1. Endpoint to check who is currently logged in (for AuthContext)
 app.get("/api/me", (req, res) => {
@@ -92,7 +91,8 @@ app.post("/auth/logout", (req, res, next) => {
   });
 });
 
-
+app.use("/auth", authRoutes);
+app.use("/api", searchRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected Successfully"))
